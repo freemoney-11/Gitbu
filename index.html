@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WinGo 1 Min Widget</title>
+
+<style>
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+iframe {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Floating circle */
+#widget {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(45deg, red, blue, purple);
+  border-radius: 50%;
+  animation: rgbGlow 3s infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+@keyframes rgbGlow {
+  0% { box-shadow: 0 0 15px red; }
+  33% { box-shadow: 0 0 15px blue; }
+  66% { box-shadow: 0 0 15px green; }
+  100% { box-shadow: 0 0 15px purple; }
+}
+
+/* Expanded Panel */
+#panel {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 260px;
+  padding: 20px;
+  background: #111;
+  border-radius: 12px;
+  color: white;
+  display: none;
+  z-index: 99999;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+#resultBox {
+  margin-top: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Full Screen Website -->
+<iframe src="https://www.dmwin15.com/#/register?invitationCode=583522131503"></iframe>
+
+<!-- Floating Widget -->
+<div id="widget">PREDICT</div>
+
+<!-- Expanded Panel -->
+<div id="panel">
+  <h3>WinGo 1 Min</h3>
+
+  <button onclick="getPrediction()">Get Prediction</button>
+
+  <div id="resultBox"></div>
+
+  <button style="background:#444" onclick="closePanel()">Back</button>
+</div>
+
+<script>
+
+const widget = document.getElementById("widget");
+const panel = document.getElementById("panel");
+
+widget.onclick = () => {
+  widget.style.display = "none";
+  panel.style.display = "block";
+};
+
+function closePanel() {
+  panel.style.display = "none";
+  widget.style.display = "flex";
+}
+
+/* --------------------------------
+   CORRECT PERIOD NUMBER CALCULATION
+----------------------------------- */
+
+function getCurrentPeriodNumber() {
+    const now = new Date();
+
+    let year = now.getFullYear();
+    let month = String(now.getMonth() + 1).padStart(2, "0");
+    let day = String(now.getDate()).padStart(2, "0");
+
+    // Today's base number: YYYYMMDD10000
+    let base = `${year}${month}${day}10000`;
+
+    // Current time
+    let hour = now.getHours();
+    let minute = now.getMinutes();
+
+    /* 
+       FIXED LOGIC (AS PER YOUR EXAMPLE):
+       7:11 = period index 10822
+       Every minute +1
+    */
+
+    const startHour = 7;
+    const startMinute = 11;
+    const startIndex = 10822;
+
+    let nowMinutes = hour * 60 + minute;
+    let startMinutes = startHour * 60 + startMinute;
+
+    let diff = nowMinutes - startMinutes;
+
+    let periodIndex = startIndex + diff;
+
+    return base + periodIndex;
+}
+
+/* --------------------------------
+   SAVE SAME RESULT FOR SAME PERIOD
+----------------------------------- */
+
+let savedResults = {};
+
+function calculateResult(periodNumber) {
+
+    if (savedResults[periodNumber]) {
+        return savedResults[periodNumber];
+    }
+
+    // last digit based BIG/SMALL
+    let lastDigit = parseInt(periodNumber.slice(-1));
+    let type = lastDigit <= 4 ? "SMALL" : "BIG";
+
+    let result = { lastDigit, type };
+
+    savedResults[periodNumber] = result;
+
+    return result;
+}
+
+/* --------------------------------
+   MAIN BUTTON ACTION
+----------------------------------- */
+
+function getPrediction() {
+
+    let period = getCurrentPeriodNumber();
+    let result = calculateResult(period);
+
+    document.getElementById("resultBox").innerHTML = `
+        Period: ${period} <br>
+        Last Digit: ${result.lastDigit} <br>
+        Result: ${result.type}
+    `;
+}
+
+</script>
+
+</body>
+</html>
