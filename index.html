@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prediction Widget</title>
+
+<!-- Full screen fix -->
+<style>
+* {
+    margin: 0;
+    padding: 0;
+}
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Full screen WebView */
+iframe {
+    width: 100vw;
+    height: 100vh;
+    border: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* Floating Widget */
+#widget {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(45deg, red, purple, blue);
+    border-radius: 50%;
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgb(255, 0, 100);
+    animation: glow 2s infinite alternate;
+}
+
+/* Glow effect */
+@keyframes glow {
+    from { box-shadow: 0 0 10px red; }
+    to { box-shadow: 0 0 25px blue; }
+}
+
+/* Result box */
+#resultBox {
+    position: fixed;
+    top: 50%;
+    right: 110px;
+    transform: translateY(-50%);
+    background: black;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    display: none;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-40%); }
+    to { opacity: 1; transform: translateY(-50%); }
+}
+
+#nextBtn {
+    margin-top: 10px;
+    background: purple;
+    padding: 8px;
+    border-radius: 5px;
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Full Website -->
+<iframe src="https://www.dmwin15.com/#/register?invitationCode=583522131503"></iframe>
+
+<!-- Floating Widget -->
+<div id="widget">PREDICT</div>
+
+<!-- Result box -->
+<div id="resultBox">
+    <div id="showResult"></div>
+    <div id="nextBtn">Get Next Prediction</div>
+</div>
+
+<script>
+// Function to generate random prediction
+function generatePrediction() {
+    let num = Math.floor(Math.random() * 10);
+    let type = (num <= 4) ? "SMALL" : "BIG";
+
+    document.getElementById("showResult").innerHTML =
+        "Number: <b>" + num + "</b><br>" + type;
+
+    document.getElementById("resultBox").style.display = "block";
+}
+
+// First click on circle
+document.getElementById("widget").onclick = generatePrediction;
+
+// Next prediction button
+document.getElementById("nextBtn").onclick = generatePrediction;
+</script>
+
+</body>
+</html>
