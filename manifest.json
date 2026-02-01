@@ -1,16 +1,16 @@
 {
-  "name": "WinGo Predictor",
+  "name": "WinGo App",
   "short_name": "WinGo",
-  "description": "WinGo prediction helper app",
+  "description": "WinGo web app",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "icon.jpg",
+      "src": "icon.png",
       "sizes": "512x512",
-      "type": "image/jpg"
+      "type": "image/png"
     }
   ]
 }
