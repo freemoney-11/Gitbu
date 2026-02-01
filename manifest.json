@@ -1,7 +1,7 @@
 {
-  "name": "WinGo App",
-  "short_name": "WinGo",
-  "description": "WinGo web app",
+  "name": "WinGo Hack 1Min",
+  "short_name": "WinGoHack",
+  "description": "WinGo Hack 1Min PWA",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
