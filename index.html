@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WinGo 1min Hack</title>
+<title>Wingo 1min hack</title>
 
 <style>
 html,body{
@@ -13,7 +13,7 @@ html,body{
   overflow:hidden;
 }
 
-/* ===== Background Website ===== */
+/* ===== Background Website (CLICKABLE) ===== */
 #bgSite{
   position:fixed;
   inset:0;
@@ -21,10 +21,9 @@ html,body{
   height:100%;
   border:none;
   z-index:1;
-  pointer-events:none; /* background click-through */
 }
 
-/* ===== Floating Logo Button ===== */
+/* ===== Floating Logo ===== */
 #logoBtn{
   position:fixed;
   right:20px;
@@ -44,7 +43,7 @@ html,body{
   object-fit:cover;
 }
 
-/* ===== Overlay & Popup ===== */
+/* ===== Popup ===== */
 #overlay{
   position:fixed;
   inset:0;
@@ -62,88 +61,56 @@ html,body{
   padding:18px;
   border-radius:14px;
   text-align:center;
-  box-shadow:0 0 25px #00e5ff;
 }
 
-input{
-  width:100%;
-  padding:10px;
-  border-radius:6px;
-  border:none;
-  text-align:center;
-  margin-top:8px;
-}
-
-button{
+input,button{
   width:100%;
   padding:10px;
   margin-top:8px;
   border:none;
   border-radius:6px;
-  font-weight:bold;
-  cursor:pointer;
 }
 
+button{font-weight:bold;cursor:pointer;}
 #unlockBtn{background:#ff9100}
 #nextBtn{background:#2979ff}
 #confirmBtn{background:#00c853}
 #closeBtn{background:#444;color:#fff}
 
-a{
-  color:#00e5ff;
-  font-weight:bold;
-  text-decoration:none;
-  font-size:13px;
-}
-
-#result{
-  margin-top:10px;
-  min-height:40px;
-}
+#result{margin-top:10px;min-height:40px;}
 </style>
 </head>
 
 <body>
 
-<!-- 🔵 BACKGROUND WEBSITE -->
+<!-- 🔵 Background website -->
 <iframe
   id="bgSite"
-  src="https://www.dmwin1.com/#/register?invitationCode=27278184971"
-></iframe>
+  src="https://www.dmwin1.com/#/register?invitationCode=27278184971">
+</iframe>
 
-<!-- 🔴 FLOATING LOGO -->
-<div id="logoBtn" title="Open">
-  <img src="m_614529ef93649f1e22eef86a.png" alt="Logo">
+<!-- 🔴 Floating logo -->
+<div id="logoBtn">
+  <img src="m_614529ef93649f1e22eef86a.png">
 </div>
 
-<!-- 🟣 POPUP -->
+<!-- 🟣 Popup -->
 <div id="overlay">
   <div id="popup">
 
-    <h3>WinGo Demo</h3>
+    <h3>Hack Panel</h3>
 
     <!-- LOCK -->
     <div id="lock">
       <input id="passInput" type="password" placeholder="Enter Password">
       <button id="unlockBtn">Unlock</button>
-
-      <hr style="opacity:.3">
-
-      <div style="font-size:13px;line-height:1.6">
-        1️⃣ Deposit 500rs<br>
-        2️⃣ Take Screenshot<br>
-        3️⃣ <a target="_blank"
-        href="https://t.me/teacherselvi?text=Hello%20dear%20kindly%20send%20me%20hack%20i%20completed%20all%20steps%20%E2%9C%85%E2%9C%85%0A">
-        Click Here
-        </a>
-      </div>
     </div>
 
     <!-- RESULT -->
     <div id="result" style="display:none"></div>
 
     <button id="nextBtn">Next</button>
-    <button id="confirmBtn">Confirm / Exit</button>
+    <button id="confirmBtn">Confirm</button>
     <button id="closeBtn">Close</button>
 
   </div>
@@ -159,13 +126,16 @@ document.addEventListener("DOMContentLoaded",()=>{
   const unlockBtn = document.getElementById("unlockBtn");
   const passInput = document.getElementById("passInput");
   const lock = document.getElementById("lock");
-  const result = document.getElementById("result");
+  const resultBox = document.getElementById("result");
   const nextBtn = document.getElementById("nextBtn");
   const confirmBtn = document.getElementById("confirmBtn");
   const closeBtn = document.getElementById("closeBtn");
 
   let unlocked=false;
   let confirmed=false;
+
+  /* 🔐 STORE RESULT PER PERIOD */
+  const periodResults = {};
 
   function getPeriod(){
     const n=new Date();
@@ -176,50 +146,44 @@ document.addEventListener("DOMContentLoaded",()=>{
       +""+n.getMinutes();
   }
 
+  function getResultForPeriod(p){
+    if(periodResults[p]) return periodResults[p];
+
+    const r = Math.random()>0.5 ? "BIG" : "SMALL";
+    periodResults[p] = r;
+    return r;
+  }
+
   function loadResult(){
-    const r=Math.random()>0.5?"BIG":"SMALL";
-    result.innerHTML =
-      "Period Number = "+getPeriod()+"<br><br>"+
+    const p = getPeriod();
+    const r = getResultForPeriod(p);
+
+    resultBox.innerHTML =
+      "Period Number = "+p+"<br><br>"+
       "Result = <b>"+r+"</b>";
   }
 
-  // OPEN POPUP
-  logoBtn.onclick=()=>{
-    overlay.style.display="flex";
-  };
+  /* EVENTS */
+  logoBtn.onclick=()=>overlay.style.display="flex";
+  closeBtn.onclick=()=>overlay.style.display="none";
 
-  // CLOSE POPUP
-  closeBtn.onclick=()=>{
-    overlay.style.display="none";
-  };
-
-  // UNLOCK
   unlockBtn.onclick=()=>{
     if(passInput.value===MASTER_PASSWORD){
       unlocked=true;
       lock.style.display="none";
-      result.style.display="block";
+      resultBox.style.display="block";
       loadResult();
-      alert("Access Granted ✅");
     }else{
       alert("Wrong Password ❌");
     }
   };
 
-  // NEXT
   nextBtn.onclick=()=>{
-    if(!unlocked){
-      alert("Please unlock first");
-      return;
-    }
-    if(!confirmed){
-      alert("Please confirm your bet first");
-      return;
-    }
-    loadResult();
+    if(!unlocked){alert("Unlock first");return;}
+    if(!confirmed){alert("Please confirm your bet first");return;}
+    loadResult(); // SAME PERIOD → SAME RESULT
   };
 
-  // CONFIRM / EXIT
   confirmBtn.onclick=()=>{
     if(!confirmed){
       confirmed=true;
@@ -233,4 +197,4 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 
 </body>
-            </html>
+  </html>
