@@ -10,31 +10,68 @@
 
 <style>
 html,body{
-  margin:0; padding:0; height:100%;
-  background:#000; color:#fff;
-  font-family:Arial, sans-serif;
+  margin:0;padding:0;height:100%;
+  background:#000;overflow:hidden;
+  font-family:Arial,sans-serif;
 }
 
-header{
-  padding:14px;
-  text-align:center;
-  font-size:18px;
-  font-weight:bold;
-  background:#111;
+/* IMPORTANT FIX */
+iframe{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  border:none;
+  pointer-events:none; /* 🔥 KEY FIX */
 }
 
-#card{
-  margin:20px;
+/* Floating Button */
+#logoBtn{
+  position:fixed;
+  right:20px;
+  top:50%;
+  transform:translateY(-50%);
+  width:70px;height:70px;
+  border-radius:50%;
+  overflow:hidden;
+  cursor:pointer;
+  z-index:999999;
+  pointer-events:auto;
+  border:3px solid transparent;
+  animation:rgbGlow 2.5s linear infinite;
+}
+
+#logoBtn img{
+  width:100%;height:100%;object-fit:cover;
+}
+
+@keyframes rgbGlow{
+  0%{box-shadow:0 0 12px red;border-color:red}
+  25%{box-shadow:0 0 12px yellow;border-color:yellow}
+  50%{box-shadow:0 0 12px lime;border-color:lime}
+  75%{box-shadow:0 0 12px blue;border-color:blue}
+  100%{box-shadow:0 0 12px purple;border-color:purple}
+}
+
+/* Popup */
+#popup{
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:300px;
+  background:rgba(10,10,10,.95);
+  border-radius:12px;
   padding:20px;
-  background:#111;
-  border-radius:14px;
   text-align:center;
+  color:#fff;
+  display:none;
+  z-index:1000000;
+  pointer-events:auto;
   border:2px solid;
   border-image:linear-gradient(45deg,red,yellow,lime,blue,purple) 1;
 }
 
 #loader{
-  width:48px;height:48px;
+  width:50px;height:50px;
   margin:10px auto;
   border-radius:50%;
   border:5px solid transparent;
@@ -43,120 +80,126 @@ header{
   border-bottom-color:lime;
   border-left-color:blue;
   animation:spin 1s linear infinite;
-  display:none;
 }
 @keyframes spin{100%{transform:rotate(360deg)}}
 
 .btn{
   width:100%;
-  padding:14px;
+  padding:12px;
   margin-top:10px;
   border:none;
-  border-radius:10px;
-  font-size:16px;
-  font-weight:bold;
+  border-radius:8px;
   color:#fff;
-}
-
-#predictBtn{background:#007bff}
-#openGame{background:#00c853}
-#nextBtn{background:#ff0037}
-
-.ball{
-  padding:6px 14px;
-  border-radius:30px;
   font-weight:bold;
 }
+#nextBtn{background:#007bff}
+#confirmBtn{background:#00c853}
+#exitBtn{background:#444}
+
+#resultBox{margin-top:10px;font-size:18px;min-height:60px}
+.ball{padding:5px 12px;border-radius:50px;color:#fff;font-weight:bold}
 .red{background:#ff0037}
 .green{background:#00c853}
 .violet{background:#9c27b0}
-
-#result{
-  margin-top:10px;
-  font-size:18px;
-  min-height:60px;
-}
 </style>
 </head>
 
 <body>
 
-<header>🔥 WinGo Hack 1Min</header>
+<iframe src="https://www.dmwin1.com/#/register?invitationCode=27278184971"></iframe>
 
-<div id="card">
+<div id="logoBtn">
+  <img src="https://raw.githubusercontent.com/freemoney-11/Gitbu/main/m_614529ef93649f1e22eef86a.png">
+</div>
+
+<div id="popup">
+  <h3>WinGo Hack 1Min</h3>
   <div id="loader"></div>
-  <div id="result">Tap “Get Prediction”</div>
-
-  <button id="predictBtn" class="btn">Get Prediction</button>
-  <button id="nextBtn" class="btn">Next Period</button>
-  <button id="openGame" class="btn">Open Game</button>
+  <div id="resultBox"></div>
+  <button id="nextBtn" class="btn">Next</button>
+  <button id="confirmBtn" class="btn">Confirm</button>
+  <button id="exitBtn" class="btn">Exit</button>
 </div>
 
 <script>
+const popup = document.getElementById("popup");
 const loader = document.getElementById("loader");
-const result = document.getElementById("result");
+const resultBox = document.getElementById("resultBox");
+const exitBtn = document.getElementById("exitBtn");
+const nextBtn = document.getElementById("nextBtn");
+const confirmBtn = document.getElementById("confirmBtn");
 
-let saved = {};
+let savedResults = {};
+let confirmed = false;
 let lastPeriod = "";
 
-/* 1-Minute Period */
-function getPeriod(){
-  const n=new Date();
-  let y=n.getFullYear();
-  let m=String(n.getMonth()+1).padStart(2,"0");
-  let d=String(n.getDate()).padStart(2,"0");
+/* Period (1 min) */
+function getCurrentPeriodNumber(){
+  const now=new Date();
+  let y=now.getFullYear();
+  let m=String(now.getMonth()+1).padStart(2,"0");
+  let d=String(now.getDate()).padStart(2,"0");
   let base=`${y}${m}${d}10000`;
-  let min=n.getHours()*60+n.getMinutes();
-  return base+(9671+min);
+  let minutes=now.getHours()*60+now.getMinutes();
+  return base+(9671+minutes);
 }
 
-function color(n){
+function getColor(n){
   if(n===0||n===5) return "violet";
   if(n%2===0) return "red";
   return "green";
 }
 
-function predict(){
-  loader.style.display="block";
-  result.innerHTML="";
-  const p=getPeriod();
-  lastPeriod=p;
+function getResult(p){
+  if(savedResults[p]) return savedResults[p];
+  let rn=Math.floor(Math.random()*10);
+  let r={rn,color:getColor(rn),type:rn<=4?"SMALL":"BIG"};
+  savedResults[p]=r;
+  return r;
+}
 
-  if(!saved[p]){
-    let rn=Math.floor(Math.random()*10);
-    saved[p]={rn,c:color(rn),t:rn<=4?"SMALL":"BIG"};
-  }
+function loadResult(){
+  loader.style.display="block";
+  resultBox.innerHTML="";
+  confirmed=false;
+
+  const p=getCurrentPeriodNumber();
+  lastPeriod=p;
+  const r=getResult(p);
 
   setTimeout(()=>{
     loader.style.display="none";
-    const r=saved[p];
-    result.innerHTML=`
+    resultBox.innerHTML=`
       Period: ${p}<br>
-      Number: <span class="ball ${r.c}">${r.rn}</span><br>
-      Result: ${r.t}
+      Number: <span class="ball ${r.color}">${r.rn}</span><br>
+      Result: ${r.type}
     `;
   },800);
 }
 
-/* Buttons */
-document.getElementById("predictBtn").onclick=predict;
-document.getElementById("nextBtn").onclick=predict;
-
-/* Auto refresh when minute changes */
+/* AUTO REFRESH */
 setInterval(()=>{
-  const p=getPeriod();
-  if(p!==lastPeriod){ predict(); }
+  const p=getCurrentPeriodNumber();
+  if(p!==lastPeriod && popup.style.display==="block"){
+    loadResult();
+  }
 },5000);
 
-/* Open Game (external – stable) */
-document.getElementById("openGame").onclick=()=>{
-  window.open(
-    "https://www.dmwin1.com/#/register?invitationCode=27278184971",
-    "_blank"
-  );
-};
+/* EVENTS */
+document.getElementById("logoBtn").addEventListener("click",()=>{
+  popup.style.display="block";
+  loadResult();
+});
 
-/* PWA */
+exitBtn.onclick=()=>popup.style.display="none";
+confirmBtn.onclick=()=>confirmed=true;
+nextBtn.onclick=()=>{
+  if(!confirmed){alert("Please Confirm First");return;}
+  loadResult();
+};
+</script>
+
+<script>
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("sw.js");
 }
