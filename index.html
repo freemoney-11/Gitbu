@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WinGo Hack 1Min</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
-
 <style>
 html,body{
   margin:0;padding:0;height:100%;
@@ -15,13 +12,12 @@ html,body{
   font-family:Arial,sans-serif;
 }
 
-/* IMPORTANT FIX */
 iframe{
   position:fixed;
-  top:0;left:0;
+  inset:0;
   width:100%;height:100%;
   border:none;
-  pointer-events:none; /* 🔥 KEY FIX */
+  pointer-events:none;
 }
 
 /* Floating Button */
@@ -35,21 +31,16 @@ iframe{
   overflow:hidden;
   cursor:pointer;
   z-index:999999;
-  pointer-events:auto;
-  border:3px solid transparent;
   animation:rgbGlow 2.5s linear infinite;
 }
-
-#logoBtn img{
-  width:100%;height:100%;object-fit:cover;
-}
+#logoBtn img{width:100%;height:100%;object-fit:cover;}
 
 @keyframes rgbGlow{
-  0%{box-shadow:0 0 12px red;border-color:red}
-  25%{box-shadow:0 0 12px yellow;border-color:yellow}
-  50%{box-shadow:0 0 12px lime;border-color:lime}
-  75%{box-shadow:0 0 12px blue;border-color:blue}
-  100%{box-shadow:0 0 12px purple;border-color:purple}
+  0%{box-shadow:0 0 12px red}
+  25%{box-shadow:0 0 12px yellow}
+  50%{box-shadow:0 0 12px lime}
+  75%{box-shadow:0 0 12px blue}
+  100%{box-shadow:0 0 12px purple}
 }
 
 /* Popup */
@@ -57,7 +48,218 @@ iframe{
   position:fixed;
   top:50%;left:50%;
   transform:translate(-50%,-50%);
-  width:300px;
+  width:320px;
+  background:#0b0b0b;
+  border-radius:14px;
+  padding:18px;
+  text-align:center;
+  color:#fff;
+  display:none;
+  z-index:1000000;
+  border:2px solid;
+  border-image:linear-gradient(45deg,red,yellow,lime,blue,purple) 1;
+}
+
+/* Timer */
+#timer{
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:10px;
+  color:#00e5ff;
+}
+
+/* Loader */
+#loader{
+  width:50px;height:50px;
+  margin:10px auto;
+  border-radius:50%;
+  border:5px solid rgba(255,255,255,.2);
+  border-top-color:#00e5ff;
+  animation:spin 1s linear infinite;
+  display:none;
+}
+@keyframes spin{100%{transform:rotate(360deg)}}
+
+/* Result */
+#resultBox{
+  font-size:16px;
+  min-height:80px;
+  display:none;
+}
+
+/* Lock Screen */
+#lock{
+  font-size:14px;
+  line-height:1.6;
+}
+
+#lock a{
+  color:#00e5ff;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.btn{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  color:#fff;
+  font-weight:bold;
+}
+#nextBtn{background:#2979ff}
+#confirmBtn{background:#00c853}
+
+.ball{
+  padding:6px 14px;
+  border-radius:50px;
+  font-weight:bold;
+}
+.red{background:#ff1744}
+.green{background:#00c853}
+.violet{background:#9c27b0}
+</style>
+</head>
+
+<body>
+
+<!-- (Optional) Background iframe -->
+<iframe src="https://www.dmwin1.com/#/register?invitationCode=27278184971"></iframe>
+
+<div id="logoBtn">
+  <img src="https://raw.githubusercontent.com/freemoney-11/Gitbu/main/m_614529ef93649f1e22eef86a.png">
+</div>
+
+<div id="popup">
+  <h3>WinGo Hack 1Min</h3>
+
+  <div id="timer">⏱️ 60s</div>
+
+  <!-- LOCK -->
+  <div id="lock">
+    🔒 <b>Prediction Locked</b><br><br>
+
+    <input id="passInput" type="password" placeholder="Enter Password"
+      style="width:100%;padding:10px;border-radius:6px;border:none;text-align:center"><br><br>
+
+    <button id="unlockBtn" class="btn" style="background:#ff9100">Unlock</button>
+
+    <hr style="opacity:.3">
+
+    <div style="font-size:13px;line-height:1.6">
+      1️⃣ Deposit 500rs<br>
+      2️⃣ Take Screenshot<br>
+      3️⃣ <a target="_blank"
+        href="https://t.me/teacherselvi?text=Hello%20dear%20kindly%20send%20me%20hack%20i%20completed%20all%20steps%20%E2%9C%85%E2%9C%85%0A">
+        Click Here
+      </a>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="loader"></div>
+  <div id="resultBox"></div>
+
+  <button id="nextBtn" class="btn">Next</button>
+  <button id="confirmBtn" class="btn">Confirm / Exit</button>
+</div>
+
+<script>
+/* ELEMENTS */
+const popup = document.getElementById("popup");
+const timerEl = document.getElementById("timer");
+const loader = document.getElementById("loader");
+const resultBox = document.getElementById("resultBox");
+const lock = document.getElementById("lock");
+const nextBtn = document.getElementById("nextBtn");
+const confirmBtn = document.getElementById("confirmBtn");
+const unlockBtn = document.getElementById("unlockBtn");
+const passInput = document.getElementById("passInput");
+
+/* STATE */
+let confirmed = false;
+let unlocked = false;
+let seconds = 60;
+
+/* PASSWORD */
+const MASTER_PASSWORD = "DMWINCNFRMWIN";
+
+/* TIMER */
+setInterval(()=>{
+  seconds--;
+  if(seconds <= 0) seconds = 60;
+  timerEl.textContent = "⏱️ " + seconds + "s";
+},1000);
+
+function getPeriod(){
+  const n = new Date();
+  return n.getFullYear()+""+(n.getMonth()+1)+""+n.getDate()+"-"+n.getHours()+n.getMinutes();
+}
+
+function getColor(n){
+  if(n===0 || n===5) return "violet";
+  if(n % 2 === 0) return "red";
+  return "green";
+}
+
+function loadResult(){
+  if(!unlocked) return;
+
+  loader.style.display = "block";
+  resultBox.style.display = "none";
+
+  const rn = Math.floor(Math.random()*10);
+  const type = rn <= 4 ? "SMALL" : "BIG";
+  const p = getPeriod();
+
+  setTimeout(()=>{
+    loader.style.display = "none";
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `
+      Period Number = ${p}<br><br>
+      Number = <span class="ball ${getColor(rn)}">${rn}</span><br><br>
+      Result = <b>${type}</b>
+    `;
+  },800);
+}
+
+/* EVENTS */
+document.getElementById("logoBtn").onclick = () => {
+  popup.style.display = "block";
+};
+
+unlockBtn.onclick = () => {
+  if(passInput.value === MASTER_PASSWORD){
+    unlocked = true;
+    lock.style.display = "none";
+    alert("Access Granted ✅");
+    loadResult();
+  }else{
+    alert("Wrong Password ❌");
+  }
+};
+
+nextBtn.onclick = () => {
+  if(!confirmed){
+    alert("Please confirm your bet first");
+    return;
+  }
+  loadResult();
+};
+
+confirmBtn.onclick = () => {
+  if(!confirmed){
+    confirmed = true;
+    alert("Bet Confirmed ✅");
+    return;
+  }
+  popup.style.display = "none";
+};
+</script>
+
+</body>
+</html>  width:300px;
   background:rgba(10,10,10,.95);
   border-radius:12px;
   padding:20px;
