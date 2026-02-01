@@ -1,40 +1,188 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WinGo 1 MIN Hack Predictor</title>
+<title>WinGo Hack 1Min</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
 
 <style>
 html,body{
-  margin:0;
-  padding:0;
-  height:100%;
-  overflow:hidden;
-  background:#000;
+  margin:0;padding:0;height:100%;
+  overflow:hidden;background:#000;
   font-family:Arial,sans-serif;
 }
 
 iframe{
-  position:fixed;
-  top:0;left:0;
-  width:100%;
-  height:100%;
-  border:none;
+  position:fixed;top:0;left:0;
+  width:100%;height:100%;border:none;
 }
 
-/* Joker Button */
+/* Floating Button */
 #logoBtn{
-  position:fixed;
-  right:20px;
-  top:50%;
+  position:fixed;right:20px;top:50%;
   transform:translateY(-50%);
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  overflow:hidden;
-  cursor:pointer;
-  z-index:99999;
-  border:3px solid transparent;
+  width:70px;height:70px;border-radius:50%;
+  overflow:hidden;cursor:pointer;
+  z-index:99999;border:3px solid transparent;
+  animation:rgbGlow 2.5s linear infinite;
+}
+#logoBtn img{width:100%;height:100%;object-fit:cover}
+
+@keyframes rgbGlow{
+  0%{box-shadow:0 0 12px red;border-color:red}
+  25%{box-shadow:0 0 12px yellow;border-color:yellow}
+  50%{box-shadow:0 0 12px lime;border-color:lime}
+  75%{box-shadow:0 0 12px blue;border-color:blue}
+  100%{box-shadow:0 0 12px purple;border-color:purple}
+}
+
+/* Popup */
+#popup{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:300px;background:rgba(10,10,10,.95);
+  border-radius:12px;padding:20px;
+  text-align:center;color:#fff;
+  display:none;z-index:999999;
+  border:2px solid;
+  border-image:linear-gradient(45deg,red,yellow,lime,blue,purple) 1;
+}
+
+#loader{
+  width:50px;height:50px;margin:10px auto;
+  border-radius:50%;border:5px solid transparent;
+  border-top-color:red;border-right-color:yellow;
+  border-bottom-color:lime;border-left-color:blue;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{100%{transform:rotate(360deg)}}
+
+.btn{
+  width:100%;padding:12px;margin-top:10px;
+  border:none;border-radius:8px;color:#fff;
+  font-weight:bold;cursor:pointer;
+}
+#nextBtn{background:#007bff}
+#confirmBtn{background:#00c853}
+#exitBtn{background:#444}
+
+#resultBox{margin-top:10px;font-size:18px;min-height:60px}
+.ball{padding:5px 12px;border-radius:50px;color:#fff;font-weight:bold}
+.red{background:#ff0037}
+.green{background:#00c853}
+.violet{background:#9c27b0}
+</style>
+</head>
+
+<body>
+
+<!-- Background Website -->
+<iframe src="https://www.dmwin1.com/#/register?invitationCode=27278184971"></iframe>
+
+<!-- Floating Button -->
+<div id="logoBtn">
+  <img src="https://raw.githubusercontent.com/freemoney-11/Gitbu/main/m_614529ef93649f1e22eef86a.png">
+</div>
+
+<!-- Popup -->
+<div id="popup">
+  <h3>WinGo Hack 1Min</h3>
+  <div id="loader"></div>
+  <div id="resultBox"></div>
+
+  <button id="nextBtn" class="btn">Next</button>
+  <button id="confirmBtn" class="btn">Confirm</button>
+  <button id="exitBtn" class="btn">Exit</button>
+</div>
+
+<script>
+const popup = document.getElementById("popup");
+const loader = document.getElementById("loader");
+const resultBox = document.getElementById("resultBox");
+const exitBtn = document.getElementById("exitBtn");
+const nextBtn = document.getElementById("nextBtn");
+const confirmBtn = document.getElementById("confirmBtn");
+
+let savedResults = {};
+let confirmed = false;
+let lastPeriod = "";
+
+/* Period (1 Min) */
+function getCurrentPeriodNumber(){
+  const now = new Date();
+  let y = now.getFullYear();
+  let m = String(now.getMonth()+1).padStart(2,"0");
+  let d = String(now.getDate()).padStart(2,"0");
+  let base = `${y}${m}${d}10000`;
+  let minutes = now.getHours()*60 + now.getMinutes();
+  return base + (9671 + minutes);
+}
+
+function getColor(num){
+  if(num===0||num===5) return "violet";
+  if(num%2===0) return "red";
+  return "green";
+}
+
+function getResult(period){
+  if(savedResults[period]) return savedResults[period];
+  let rn = Math.floor(Math.random()*10);
+  let res = { rn, color:getColor(rn), type: rn<=4?"SMALL":"BIG" };
+  savedResults[period]=res;
+  return res;
+}
+
+function loadResult(){
+  loader.style.display="block";
+  resultBox.innerHTML="";
+  confirmed=false;
+
+  const period=getCurrentPeriodNumber();
+  lastPeriod = period;
+  const res=getResult(period);
+
+  setTimeout(()=>{
+    loader.style.display="none";
+    resultBox.innerHTML=`
+      Period: ${period}<br>
+      Number: <span class="ball ${res.color}">${res.rn}</span><br>
+      Result: ${res.type}
+    `;
+  },1000);
+}
+
+/* Auto Refresh on new minute */
+setInterval(()=>{
+  const p = getCurrentPeriodNumber();
+  if(p !== lastPeriod && popup.style.display==="block"){
+    loadResult();
+  }
+},5000);
+
+/* Events */
+document.getElementById("logoBtn").onclick=()=>{
+  popup.style.display="block";
+  loadResult();
+};
+exitBtn.onclick=()=>popup.style.display="none";
+confirmBtn.onclick=()=>confirmed=true;
+nextBtn.onclick=()=>{
+  if(!confirmed){ alert("Please Confirm First!"); return; }
+  loadResult();
+};
+</script>
+
+<script>
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+
+</body>
+</html>  border:3px solid transparent;
   animation:rgbGlow 2.5s linear infinite;
 }
 
