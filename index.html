@@ -3,148 +3,135 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WinGo Hack Predictor</title>
+
 <style>
-html,body{background:#000}
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-  background: black;
-  font-family: Arial, sans-serif;
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+  overflow:hidden;
+  background:#000;
+  font-family:Arial,sans-serif;
 }
 
-iframe {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
+iframe{
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  border:none;
 }
 
-/* Joker Logo Button */
-#logoBtn {
-  position: fixed;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  overflow: hidden;
-  cursor: pointer;
-  z-index: 99999;
-  border: 3px solid transparent;
-  animation: rgbGlow 2.5s linear infinite;
+/* Joker Button */
+#logoBtn{
+  position:fixed;
+  right:20px;
+  top:50%;
+  transform:translateY(-50%);
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  overflow:hidden;
+  cursor:pointer;
+  z-index:99999;
+  border:3px solid transparent;
+  animation:rgbGlow 2.5s linear infinite;
 }
 
-#logoBtn img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+#logoBtn img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-/* RGB Border Glow */
-@keyframes rgbGlow {
-  0% { box-shadow: 0 0 12px red; border-color: red; }
-  25% { box-shadow: 0 0 12px yellow; border-color: yellow; }
-  50% { box-shadow: 0 0 12px lime; border-color: lime; }
-  75% { box-shadow: 0 0 12px blue; border-color: blue; }
-  100% { box-shadow: 0 0 12px purple; border-color: purple; }
+@keyframes rgbGlow{
+  0%{box-shadow:0 0 12px red;border-color:red}
+  25%{box-shadow:0 0 12px yellow;border-color:yellow}
+  50%{box-shadow:0 0 12px lime;border-color:lime}
+  75%{box-shadow:0 0 12px blue;border-color:blue}
+  100%{box-shadow:0 0 12px purple;border-color:purple}
 }
 
-/* Popup Window */
-#popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 300px;
-  transform: translate(-50%, -50%);
-  background: rgba(10,10,10,0.95);
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  color: white;
-  border: 2px solid;
-  border-image: linear-gradient(45deg, red, yellow, lime, blue, purple) 1;
-  display: none;
-  z-index: 999999;
+/* Popup */
+#popup{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:300px;
+  background:rgba(10,10,10,.95);
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  color:#fff;
+  display:none;
+  z-index:999999;
+  border:2px solid;
+  border-image:linear-gradient(45deg,red,yellow,lime,blue,purple) 1;
 }
 
-/* Loading Spinner */
-#loader {
-  width: 50px;
-  height: 50px;
-  margin: 10px auto;
-  border-radius: 50%;
-  border: 5px solid transparent;
-  border-top-color: red;
-  border-right-color: yellow;
-  border-bottom-color: lime;
-  border-left-color: blue;
-  animation: spin 1s linear infinite;
+#loader{
+  width:50px;
+  height:50px;
+  margin:10px auto;
+  border-radius:50%;
+  border:5px solid transparent;
+  border-top-color:red;
+  border-right-color:yellow;
+  border-bottom-color:lime;
+  border-left-color:blue;
+  animation:spin 1s linear infinite;
 }
 
-@keyframes spin {
-  100% { transform: rotate(360deg); }
+@keyframes spin{100%{transform:rotate(360deg)}}
+
+.btn{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-/* Buttons */
-.btn {
-  width: 100%;
-  background: #ff0037;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: bold;
-  margin-top: 10px;
-  cursor: pointer;
-  transition: 0.2s;
+#nextBtn{background:#007bff}
+#confirmBtn{background:#00c853}
+#exitBtn{background:#444}
+
+#resultBox{
+  margin-top:10px;
+  font-size:18px;
+  min-height:60px;
 }
 
-#exitBtn { background: #444; }
-#nextBtn { background: #007bff; }
-#confirmBtn { background: #00c853; }
-
-/* Result Box */
-#resultBox {
-  margin-top: 10px;
-  font-size: 20px;
-  font-weight: bold;
-  min-height: 60px;
+.ball{
+  padding:5px 12px;
+  border-radius:50px;
+  color:#fff;
+  font-weight:bold;
 }
-
-.ball {
-  padding: 5px 12px;
-  border-radius: 50px;
-  color: #fff;
-  display: inline-block;
-  font-weight: bold;
-}
-
-.red { background: #ff0037; }
-.green { background: #00c853; }
-.violet { background: #9c27b0; }
-
+.red{background:#ff0037}
+.green{background:#00c853}
+.violet{background:#9c27b0}
 </style>
 </head>
+
 <body>
 
-<!-- Background Website -->
+<!-- Background site -->
 <iframe src="https://www.dmwin1.com/#/register?invitationCode=27278184971"></iframe>
 
-<!-- Joker Logo Button -->
+<!-- Floating button -->
 <div id="logoBtn">
   <img src="https://raw.githubusercontent.com/freemoney-11/Gitbu/main/m_614529ef93649f1e22eef86a.png">
 </div>
 
-<!-- Popup Box -->
+<!-- Popup -->
 <div id="popup">
   <h3>WinGo Joker VIP</h3>
-
   <div id="loader"></div>
-
   <div id="resultBox"></div>
 
   <button id="nextBtn" class="btn">Next</button>
@@ -153,106 +140,82 @@ iframe {
 </div>
 
 <script>
-
 const popup = document.getElementById("popup");
-const resultBox = document.getElementById("resultBox");
 const loader = document.getElementById("loader");
+const resultBox = document.getElementById("resultBox");
 
-let lastShownPeriod = "";
+const exitBtn = document.getElementById("exitBtn");
+const nextBtn = document.getElementById("nextBtn");
+const confirmBtn = document.getElementById("confirmBtn");
+
 let savedResults = {};
 let confirmed = false;
 
-/* -------- Correct Period Number (MATCHES WEBSITE) -------- */
-function getCurrentPeriodNumber() {
-    const now = new Date();
-
-    let y = now.getFullYear();
-    let m = String(now.getMonth() + 1).padStart(2,"0");
-    let d = String(now.getDate()).padStart(2,"0");
-
-    let base = `${y}${m}${d}10000`;
-
-    let hour = now.getHours();
-    let minute = now.getMinutes();
-
-    let minutesNow = hour*60 + minute;
-
-    /* REAL decoded daily start index */
-    const startIndex = 9671;
-
-    return base + (startIndex + minutesNow);
+/* Period */
+function getCurrentPeriodNumber(){
+  const now = new Date();
+  let y = now.getFullYear();
+  let m = String(now.getMonth()+1).padStart(2,"0");
+  let d = String(now.getDate()).padStart(2,"0");
+  let base = `${y}${m}${d}10000`;
+  let minutes = now.getHours()*60 + now.getMinutes();
+  return base + (9671 + minutes);
 }
 
-/* Color Logic */
 function getColor(num){
-  if(num===0 || num===5) return "violet";
+  if(num===0||num===5) return "violet";
   if(num%2===0) return "red";
   return "green";
 }
 
-/* One Result Per Period */
 function getResult(period){
-
   if(savedResults[period]) return savedResults[period];
-
   let rn = Math.floor(Math.random()*10);
-  let type = rn <= 4 ? "SMALL" : "BIG";
-  let color = getColor(rn);
-
-  savedResults[period] = {rn, type, color};
-  return savedResults[period];
+  let res = {rn,color:getColor(rn),type:rn<=4?"SMALL":"BIG"};
+  savedResults[period]=res;
+  return res;
 }
 
-/* Load Result After 1 Sec Animation */
 function loadResult(){
+  loader.style.display="block";
+  resultBox.innerHTML="";
+  confirmed=false;
 
-  loader.style.display = "block";
-  resultBox.innerHTML = "";
-  confirmed = false;
-
-  let period = getCurrentPeriodNumber();
-  lastShownPeriod = period;
-
-  let res = getResult(period);
+  const period=getCurrentPeriodNumber();
+  const res=getResult(period);
 
   setTimeout(()=>{
-      loader.style.display = "none";
-      resultBox.innerHTML = `
-        Period: ${period}<br>
-        Number: <span class="ball ${res.color}">${res.rn}</span><br>
-        Result: ${res.type}
-      `;
+    loader.style.display="none";
+    resultBox.innerHTML=`
+      Period: ${period}<br>
+      Number: <span class="ball ${res.color}">${res.rn}</span><br>
+      Result: ${res.type}
+    `;
   },1000);
-
 }
 
-/* Logo Click → Popup Open */
-document.getElementById("logoBtn").onclick = ()=>{
-  popup.style.display = "block";
+/* Events */
+document.getElementById("logoBtn").onclick=()=>{
+  popup.style.display="block";
   loadResult();
 };
 
-/* Exit */
-exitBtn.onclick = ()=>{
-  popup.style.display = "none";
-};
+exitBtn.onclick=()=>popup.style.display="none";
+confirmBtn.onclick=()=>confirmed=true;
 
-/* Confirm Result */
-confirmBtn.onclick = ()=>{
-  confirmed = true;
-};
-
-/* Next Period */
-nextBtn.onclick = ()=>{
-
+nextBtn.onclick=()=>{
   if(!confirmed){
     alert("Please Confirm First!");
     return;
   }
-
   loadResult();
 };
-<script> if (typeof navigator.serviceWorker !== 'undefined') { navigator.serviceWorker.register('sw.js') } </script>
+</script>
+
+<script>
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js");
+}
 </script>
 
 </body>
