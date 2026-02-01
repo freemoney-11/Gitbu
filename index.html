@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WinGo 1Min</title>
+
+<style>
+html,body{
+  margin:0;padding:0;height:100%;
+  background:#000;
+  font-family:Arial,sans-serif;
+  overflow:hidden;
+}
+
+/* Background site */
+#bgSite{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:none;
+  z-index:1;
+}
+
+/* Floating logo */
+#logoBtn{
+  position:fixed;
+  right:20px;
+  top:50%;
+  transform:translateY(-50%);
+  width:70px;height:70px;
+  border-radius:50%;
+  overflow:hidden;
+  cursor:pointer;
+  z-index:9999;
+  box-shadow:0 0 20px #00e5ff;
+}
+#logoBtn img{width:100%;height:100%;object-fit:cover}
+
+/* Overlay */
+#overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:10000;
+}
+
+/* Popup */
+#popup{
+  width:330px;
+  padding:18px;
+  border-radius:16px;
+  background:linear-gradient(180deg,#111,#050505);
+  color:#fff;
+  text-align:center;
+  box-shadow:0 0 30px rgba(0,229,255,.25);
+}
+
+#popup h3{margin:5px 0 12px;font-size:20px}
+
+/* Instructions */
+#instructions{
+  margin:10px 0 8px;
+  padding:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.06);
+  font-size:13px;
+  line-height:1.6;
+  text-align:left;
+}
+#instructions b{color:#00e5ff}
+#instructions a{
+  color:#00e5ff;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+/* Loader */
+#loader{
+  width:64px;height:64px;
+  margin:10px auto;
+  border-radius:50%;
+  border:6px solid rgba(255,255,255,.15);
+  border-top-color:#00e5ff;
+  animation:spin 1s linear infinite, glow 1.5s ease-in-out infinite;
+  display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glow{
+  0%,100%{box-shadow:0 0 6px #00e5ff}
+  50%{box-shadow:0 0 20px #00e5ff}
+}
+
+input,button{
+  width:100%;
+  padding:11px;
+  margin-top:8px;
+  border:none;
+  border-radius:8px;
+  font-size:14px;
+}
+button{font-weight:bold;cursor:pointer}
+
+#unlockBtn{background:#ff9100;color:#000}
+#nextBtn{background:#2979ff;color:#fff}
+#confirmBtn{background:#00c853;color:#fff;display:none}
+#closeBtn{background:#333;color:#fff}
+
+#result{
+  display:none;
+  margin-top:12px;
+  padding:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.05);
+  font-size:14px;
+}
+
+.ball{padding:5px 12px;border-radius:18px;color:#fff;font-weight:bold}
+.red{background:#ff1744}
+.green{background:#00c853}
+.violet{background:#9c27b0}
+</style>
+</head>
+
+<body>
+
+<iframe id="bgSite"
+  src="https://www.dmwin1.com/#/register?invitationCode=27278184971">
+</iframe>
+
+<div id="logoBtn">
+  <img src="m_614529ef93649f1e22eef86a.png">
+</div>
+
+<div id="overlay">
+  <div id="popup">
+
+    <h3>WinGo 1 Minute</h3>
+
+    <!-- INSTRUCTIONS -->
+    <div id="instructions">
+      <b>Instructions:</b><br>
+      1️⃣ Deposit <b>₹500</b><br>
+      2️⃣ Take <b>Screenshot</b><br>
+      3️⃣ Click 👉
+      <a target="_blank"
+         href="https://t.me/teacherselvi?text=Hello%20dear%20kindly%20send%20me%20hack%20i%20completed%20all%20steps%20%E2%9C%85%E2%9C%85%0A">
+         Contact on Telegram
+      </a><br>
+      4️⃣ Enter password & unlock prediction
+    </div>
+
+    <!-- LOCK -->
+    <div id="lock">
+      <input id="passInput" type="password" placeholder="Enter Access Password">
+      <button id="unlockBtn">Unlock Prediction</button>
+    </div>
+
+    <!-- Loader -->
+    <div id="loader"></div>
+
+    <!-- Result -->
+    <div id="result"></div>
+
+    <!-- Buttons -->
+    <button id="nextBtn">Next</button>
+    <button id="confirmBtn">Confirm</button>
+    <button id="closeBtn">Close</button>
+
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+  /* PASSWORD SYSTEM (UNCHANGED) */
+  const MASTER_PASSWORD = "DMWINCNFRMWIN";
+
+  const logoBtn = document.getElementById("logoBtn");
+  const overlay = document.getElementById("overlay");
+  const unlockBtn = document.getElementById("unlockBtn");
+  const passInput = document.getElementById("passInput");
+  const lock = document.getElementById("lock");
+  const loader = document.getElementById("loader");
+  const resultBox = document.getElementById("result");
+  const nextBtn = document.getElementById("nextBtn");
+  const confirmBtn = document.getElementById("confirmBtn");
+  const closeBtn = document.getElementById("closeBtn");
+
+  let unlocked=false;
+  let confirmed=false;
+  let lastPeriod="";
+  const periodResults={};
+
+  /* PERIOD LOGIC */
+  function getCurrentPeriod(){
+    const n=new Date();
+    const y=n.getFullYear();
+    const m=String(n.getMonth()+1).padStart(2,"0");
+    const d=String(n.getDate()).padStart(2,"0");
+    const base=`${y}${m}${d}10000`;
+    const minutes=n.getHours()*60+n.getMinutes();
+    return base+(9671+minutes);
+  }
+
+  function getColor(n){
+    if(n===0||n===5) return "violet";
+    if(n%2===0) return "red";
+    return "green";
+  }
+
+  function getResultForPeriod(p){
+    if(periodResults[p]) return periodResults[p];
+    const rn=Math.floor(Math.random()*10);
+    const type=rn<=4?"SMALL":"BIG";
+    const color=getColor(rn);
+    const res={rn,type,color};
+    periodResults[p]=res;
+    return res;
+  }
+
+  function loadResult(){
+    loader.style.display="block";
+    resultBox.style.display="none";
+
+    setTimeout(()=>{
+      const p=getCurrentPeriod();
+      if(p!==lastPeriod){
+        confirmed=false;
+        confirmBtn.style.display="block";
+        lastPeriod=p;
+      }
+      const r=getResultForPeriod(p);
+
+      loader.style.display="none";
+      resultBox.style.display="block";
+      resultBox.innerHTML=`
+        Period Number: <b>${p}</b><br><br>
+        Number: <span class="ball ${r.color}">${r.rn}</span><br><br>
+        Result: <b>${r.type}</b>
+      `;
+    },800);
+  }
+
+  /* AUTO PERIOD CHECK */
+  setInterval(()=>{
+    const p=getCurrentPeriod();
+    if(unlocked && p!==lastPeriod){
+      loadResult();
+    }
+  },5000);
+
+  /* EVENTS */
+  logoBtn.onclick=()=>overlay.style.display="flex";
+  closeBtn.onclick=()=>overlay.style.display="none";
+
+  unlockBtn.onclick=()=>{
+    if(passInput.value===MASTER_PASSWORD){
+      unlocked=true;
+      lock.style.display="none";
+      confirmBtn.style.display="block";
+      loadResult();
+    }else{
+      alert("Wrong Password ❌");
+    }
+  };
+
+  nextBtn.onclick=()=>{
+    if(!unlocked){alert("Unlock first");return;}
+    if(!confirmed){alert("Please confirm your bet first");return;}
+    loadResult();
+  };
+
+  // Confirm only (no exit)
+  confirmBtn.onclick=()=>{
+    confirmed=true;
+    confirmBtn.style.display="none";
+    alert("Bet Confirmed ✅");
+  };
+
+});
+</script>
+
+</body>
+  </html>
