@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WinGo Demo</title>
+
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+  background:#000;
+  font-family:Arial,sans-serif;
+}
+
+/* Floating Logo Button */
+#logoBtn{
+  position:fixed;
+  right:20px;
+  top:50%;
+  transform:translateY(-50%);
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  cursor:pointer;
+  z-index:9999;
+  overflow:hidden;
+  box-shadow:0 0 20px #00e5ff;
+}
+#logoBtn img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* Overlay */
+#overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:10000;
+}
+
+/* Popup */
+#popup{
+  width:320px;
+  background:#111;
+  color:#fff;
+  padding:18px;
+  border-radius:14px;
+  text-align:center;
+  box-shadow:0 0 25px #00e5ff;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  text-align:center;
+  margin-top:8px;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border:none;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#unlockBtn{background:#ff9100}
+#nextBtn{background:#2979ff}
+#confirmBtn{background:#00c853}
+#closeBtn{background:#444;color:#fff}
+
+a{
+  color:#00e5ff;
+  font-weight:bold;
+  text-decoration:none;
+  font-size:13px;
+}
+
+#result{
+  margin-top:10px;
+  min-height:40px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Floating Logo -->
+<div id="logoBtn" title="Open">
+  <img src="m_614529ef93649f1e22eef86a.png" alt="Logo">
+</div>
+
+<!-- Popup -->
+<div id="overlay">
+  <div id="popup">
+
+    <h3>WinGo Demo</h3>
+
+    <!-- LOCK -->
+    <div id="lock">
+      <input id="passInput" type="password" placeholder="Enter Password">
+      <button id="unlockBtn">Unlock</button>
+
+      <hr style="opacity:.3">
+
+      <div style="font-size:13px;line-height:1.6">
+        1️⃣ Deposit 500rs<br>
+        2️⃣ Take Screenshot<br>
+        3️⃣ <a target="_blank"
+        href="https://t.me/teacherselvi?text=Hello%20dear%20kindly%20send%20me%20hack%20i%20completed%20all%20steps%20%E2%9C%85%E2%9C%85%0A">
+        Click Here
+        </a>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result" style="display:none"></div>
+
+    <button id="nextBtn">Next</button>
+    <button id="confirmBtn">Confirm / Exit</button>
+    <button id="closeBtn">Close</button>
+
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+  const MASTER_PASSWORD = "DMWINCNFRMWIN";
+
+  const logoBtn = document.getElementById("logoBtn");
+  const overlay = document.getElementById("overlay");
+  const unlockBtn = document.getElementById("unlockBtn");
+  const passInput = document.getElementById("passInput");
+  const lock = document.getElementById("lock");
+  const result = document.getElementById("result");
+  const nextBtn = document.getElementById("nextBtn");
+  const confirmBtn = document.getElementById("confirmBtn");
+  const closeBtn = document.getElementById("closeBtn");
+
+  let unlocked=false;
+  let confirmed=false;
+
+  function getPeriod(){
+    const n=new Date();
+    return n.getFullYear()
+      +""+(n.getMonth()+1)
+      +""+n.getDate()
+      +""+n.getHours()
+      +""+n.getMinutes();
+  }
+
+  function loadResult(){
+    const r=Math.random()>0.5?"BIG":"SMALL";
+    result.innerHTML=
+      "Period Number = "+getPeriod()+"<br><br>"+
+      "Result = <b>"+r+"</b>";
+  }
+
+  // OPEN
+  logoBtn.onclick=()=>{
+    overlay.style.display="flex";
+  };
+
+  // CLOSE
+  closeBtn.onclick=()=>{
+    overlay.style.display="none";
+  };
+
+  // UNLOCK
+  unlockBtn.onclick=()=>{
+    if(passInput.value===MASTER_PASSWORD){
+      unlocked=true;
+      lock.style.display="none";
+      result.style.display="block";
+      loadResult();
+      alert("Access Granted ✅");
+    }else{
+      alert("Wrong Password ❌");
+    }
+  };
+
+  // NEXT
+  nextBtn.onclick=()=>{
+    if(!unlocked){
+      alert("Please unlock first");
+      return;
+    }
+    if(!confirmed){
+      alert("Please confirm your bet first");
+      return;
+    }
+    loadResult();
+  };
+
+  // CONFIRM / EXIT
+  confirmBtn.onclick=()=>{
+    if(!confirmed){
+      confirmed=true;
+      alert("Bet Confirmed ✅");
+      return;
+    }
+    overlay.style.display="none";
+  };
+
+});
+</script>
+
+</body>
+  </html>
